@@ -1,0 +1,40 @@
+{
+  "name": "simple-map",
+  "version": "1.0.0",
+  "description": "Simple Map Application",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.4.2",
+    "axios": "^1.11.0",
+    "bootstrap": "^5.3.2",
+    "daisyui": "^5.0.50",
+    "leaflet": "^1.9.4",
+    "lucide-react": "^0.542.0",
+    "next": "14.0.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-leaflet": "^4.2.1",
+    "react-screen-size-helper": "^1.0.3",
+    "react-tabs": "^6.1.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "14.0.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.0"
+  },
+  "keywords": [
+    "map",
+    "leaflet",
+    "nextjs"
+  ],
+  "author": "Developer",
+  "license": "MIT"
+}

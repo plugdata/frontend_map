@@ -1,0 +1,571 @@
+'use client'
+import { useState, useEffect, useCallback } from 'react'
+import apiService from '../utils/apiService'
+import { API_CONFIG } from '../utils/apiConfig'
+
+export const useApiData = () => {
+  const [mapPoints, setMapPoints] = useState([])
+  const [buildingControlData, setBuildingControlData] = useState([])
+  const [riskZoneData, setRiskZoneData] = useState([])
+  const [zoningPlanData, setZoningPlanData] = useState([])
+  const [uploadsData, setUploadsData] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [metadata, setMetadata] = useState({})
+
+  // Simple API fetch functions (background loading)
+  const fetchMapPoints = useCallback(async (params = {}) => {
+    try {
+      const response = await apiService.getMapPoints(params)
+      setMapPoints(response)
+      return response
+    } catch (err) {
+      console.error('Error fetching map points:', err)
+      return []
+    }
+  }, [])
+
+  const fetchBuildingControl = useCallback(async (params = {}) => {
+    try {
+      const response = await apiService.getBuildingControl(params)
+      setBuildingControlData(response)
+      return response
+    } catch (err) {
+      console.error('Error fetching building control:', err)
+      return []
+    }
+  }, [])
+
+  const fetchRiskZone = useCallback(async (params = {}) => {
+    try {
+      const response = await apiService.getRiskZone(params)
+      setRiskZoneData(response)
+      return response
+    } catch (err) {
+      console.error('Error fetching risk zone:', err)
+      return []
+    }
+  }, [])
+
+  const fetchZoningPlan = useCallback(async (params = {}) => {
+    try {
+      const response = await apiService.getZoningPlan(params)
+      setZoningPlanData(response)
+      return response
+    } catch (err) {
+      console.error('Error fetching zoning plan:', err)
+      return []
+    }
+  }, [])
+
+  const fetchUploads = useCallback(async (params = {}) => {
+    try {
+      const response = await apiService.getUploads(params)
+      setUploadsData(response)
+      return response
+    } catch (err) {
+      console.error('Error fetching uploads:', err)
+      return []
+    }
+  }, [])
+
+  // Get processed data for tabs - ใช้ข้อมูลจริงถ้ามี ถ้าไม่มีใช้ mockup
+  const getProcessedData = useCallback((tabType) => {
+    console.log('🔄 getProcessedData called for tab:', tabType)
+    
+    // Mockup data สำหรับแต่ละ tab
+    const mockBuildingControl = [
+      {
+        id: 'BC-demo-1',
+        title: 'อาคารสำนักงานเทศบาล - ใบอนุญาตก่อสร้าง',
+        img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=300&fit=crop&crop=center',
+        desc: 'ใบอนุญาตเลขที่ BC-001/2567 สำหรับอาคารสำนักงานเทศบาลนครตรัง',
+        status: 'approved',
+        statusText: 'อนุมัติแล้ว',
+        applicant: 'เจ้าของ ID: 001',
+        location: 'เลขที่ใบอนุญาต: BC-001/2567',
+        submittedDate: '2024-01-15',
+        approvedDate: '2024-02-01',
+        tags: ['อาคารสำนักงาน', 'ก่อสร้าง', 'อนุมัติแล้ว'],
+        originalData: null
+      },
+      {
+        id: 'BC-demo-2',
+        title: 'ห้างสรรพสินค้าเซ็นทรัล - ใบอนุญาตดัดแปลง',
+        img: 'https://images.unsplash.com/photo-1545454675-3531b543be5d?w=400&h=300&fit=crop&crop=center',
+        desc: 'ใบอนุญาตเลขที่ BC-002/2567 สำหรับการดัดแปลงห้างสรรพสินค้าเซ็นทรัล',
+        status: 'pending',
+        statusText: 'รอพิจารณา',
+        applicant: 'เจ้าของ ID: 002',
+        location: 'เลขที่ใบอนุญาต: BC-002/2567',
+        submittedDate: '2024-01-20',
+        approvedDate: null,
+        tags: ['ห้างสรรพสินค้า', 'ดัดแปลง', 'รอพิจารณา'],
+        originalData: null
+      },
+      {
+        id: 'BC-demo-3',
+        title: 'โรงแรมตรังแกรนด์ - ใบอนุญาตรื้อถอน',
+        img: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=300&fit=crop&crop=center',
+        desc: 'ใบอนุญาตเลขที่ BC-003/2567 สำหรับการรื้อถอนโรงแรมตรังแกรนด์',
+        status: 'draft',
+        statusText: 'ร่างเอกสาร',
+        applicant: 'เจ้าของ ID: 003',
+        location: 'เลขที่ใบอนุญาต: BC-003/2567',
+        submittedDate: null,
+        approvedDate: null,
+        tags: ['โรงแรม', 'รื้อถอน', 'ร่างเอกสาร'],
+        originalData: null
+      }
+    ]
+
+    const mockRiskZone = [
+      {
+        id: 'RZ-demo-1',
+        title: 'โครงการถนนรอบเมืองตรัง',
+        img: 'https://images.unsplash.com/photo-1545454675-3531b543be5d?w=400&h=300&fit=crop&crop=center',
+        desc: 'โครงการก่อสร้างถนนรอบเมืองตรังระยะที่ 1',
+        status: 'in-progress',
+        statusText: 'กำลังดำเนินการ',
+        contractor: 'เจ้าของ: บริษัทก่อสร้างตรัง จำกัด',
+        location: 'ถนนรอบเมือง',
+        startDate: '2024-01-01',
+        endDate: null,
+        budget: '50,000,000',
+        progress: 75,
+        tags: ['ถนน', 'งานสาธารณะ', 'กำลังดำเนินการ'],
+        originalData: null
+      },
+      {
+        id: 'RZ-demo-2',
+        title: 'ระบบระบายน้ำชุมชน',
+        img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=300&fit=crop&crop=center',
+        desc: 'โครงการปรับปรุงระบบระบายน้ำชุมชนตำบลทับเที่ยง',
+        status: 'completed',
+        statusText: 'เสร็จสิ้น',
+        contractor: 'เจ้าของ: กรมชลประทาน',
+        location: 'ตำบลทับเที่ยง',
+        startDate: '2023-06-01',
+        endDate: '2023-12-31',
+        budget: '30,000,000',
+        progress: 100,
+        tags: ['ระบายน้ำ', 'งานสาธารณะ', 'เสร็จสิ้น'],
+        originalData: null
+      }
+    ]
+
+    const mockZoningPlan = [
+      {
+        id: 'ZP-demo-1',
+        title: 'แผนผังเมืองตรัง 2567-2571',
+        img: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=300&fit=crop&crop=center',
+        desc: 'แผนผังเมืองตรังระยะที่ 2 (2567-2571)',
+        status: 'approved',
+        statusText: 'อนุมัติแล้ว',
+        department: 'กองผังเมือง',
+        location: 'เขตเทศบาลนครตรัง',
+        startDate: '2024-01-01',
+        endDate: '2028-12-31',
+        budget: '100,000,000',
+        progress: 25,
+        tags: ['แผนผังเมือง', 'งานผังเมือง', 'อนุมัติแล้ว'],
+        originalData: null
+      },
+      {
+        id: 'ZP-demo-2',
+        title: 'แผนพัฒนาพื้นที่เศรษฐกิจพิเศษ',
+        img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=300&fit=crop&crop=center',
+        desc: 'แผนพัฒนาพื้นที่เศรษฐกิจพิเศษจังหวัดตรัง',
+        status: 'planning',
+        statusText: 'วางแผน',
+        department: 'กองผังเมือง',
+        location: 'จังหวัดตรัง',
+        startDate: null,
+        endDate: null,
+        budget: '200,000,000',
+        progress: 10,
+        tags: ['เศรษฐกิจพิเศษ', 'งานผังเมือง', 'วางแผน'],
+        originalData: null
+      }
+    ]
+    
+    switch (tabType) {
+      case 'medical':
+        // ใช้ข้อมูลจริงจาก API ถ้ามี ถ้าไม่มีใช้ mockup
+        if (buildingControlData && buildingControlData.length > 0) {
+          console.log('🏗️ Using real building control data:', buildingControlData.length)
+          return buildingControlData.map((item, index) => {
+            // ตรวจสอบว่าข้อมูลอยู่ใน params หรือตรงๆ
+            const data = item.params || item
+            
+            if (!data) {
+              console.warn(`⚠️ Item ${index + 1} has no data:`, item)
+              return null
+            }
+            
+            const { 
+              id, 
+              buildingType, 
+              building_type, 
+              usePurpose, 
+              use_purpose, 
+              licenseNumber, 
+              license_number, 
+              status, 
+              date, 
+              ownerId, 
+              owner_id 
+            } = data
+            
+            const processedItem = {
+              id: `BC-${id || 'unknown'}`,
+              title: item.title || `${buildingType || building_type || 'ไม่ระบุ'} - ${usePurpose || use_purpose || 'ไม่ระบุ'}`,
+              img: uploadsData.find(upload => upload.buildingControlId === id)?.url || 
+                   'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=300&fit=crop&crop=center',
+              desc: `ใบอนุญาตเลขที่ ${licenseNumber || license_number || 'ไม่ระบุ'} สำหรับ ${buildingType || building_type || 'ไม่ระบุ'}`,
+              status: status || 'pending',
+              statusText: getStatusText(status || 'pending'),
+              applicant: `เจ้าของ ID: ${ownerId || owner_id || 'ไม่ระบุ'}`,
+              location: `เลขที่ใบอนุญาต: ${licenseNumber || license_number || 'ไม่ระบุ'}`,
+              submittedDate: date,
+              approvedDate: status === 'approved' ? date : null,
+              tags: [buildingType || building_type, usePurpose || use_purpose, getStatusText(status || 'pending')].filter(Boolean),
+              originalData: item,
+              // Add coordinates for map connection
+              coordinates: { lat: 7.5563 + (index * 0.01), lng: 99.6114 + (index * 0.01) }
+            }
+            
+            console.log(`✅ Processed building control item ${index + 1}:`, processedItem.title)
+            return processedItem
+          }).filter(Boolean)
+        } else {
+          console.log('🏗️ Using mockup building control data:', mockBuildingControl.length)
+          return mockBuildingControl.map((item, index) => ({
+            ...item,
+            // Add coordinates for map connection
+            coordinates: { lat: 7.5563 + (index * 0.01), lng: 99.6114 + (index * 0.01) }
+          }))
+        }
+
+      case 'software':
+        // ใช้ข้อมูลจริงจาก API ถ้ามี ถ้าไม่มีใช้ mockup
+        if (riskZoneData && riskZoneData.length > 0) {
+          console.log('🚧 Using real risk zone data:', riskZoneData.length)
+          return riskZoneData.map((item, index) => {
+            const data = item.params || item
+            
+            if (!data) {
+              console.warn(`⚠️ Item ${index + 1} has no data:`, item)
+              return null
+            }
+            
+            const { id, zoneType, description, owner, createdAt } = data
+            
+            const processedItem = {
+              id: `RZ-${id || 'unknown'}`,
+              title: item.title || zoneType || 'ไม่ระบุ',
+              img: uploadsData.find(upload => upload.riskZoneId === id)?.url || 
+                   'https://images.unsplash.com/photo-1545454675-3531b543be5d?w=400&h=300&fit=crop&crop=center',
+              desc: description || 'ไม่มีคำอธิบาย',
+              status: 'in-progress',
+              statusText: 'กำลังดำเนินการ',
+              contractor: `เจ้าของ: ${owner || 'ไม่ระบุ'}`,
+              location: zoneType || 'ไม่ระบุ',
+              startDate: createdAt,
+              endDate: null,
+              budget: '0',
+              progress: 50,
+              tags: [zoneType, 'งานสาธารณะ', 'กำลังดำเนินการ'].filter(Boolean),
+              originalData: item
+            }
+            
+            console.log(`✅ Processed risk zone item ${index + 1}:`, processedItem.title)
+            return processedItem
+          }).filter(Boolean)
+        } else {
+          console.log('🚧 Using mockup risk zone data:', mockRiskZone.length)
+          return mockRiskZone.map((item, index) => ({
+            ...item,
+            // Add coordinates for map connection
+            coordinates: { lat: 7.5663 + (index * 0.01), lng: 99.6214 + (index * 0.01) }
+          }))
+        }
+
+      case 'financial':
+        // ใช้ข้อมูลจริงจาก API ถ้ามี ถ้าไม่มีใช้ mockup
+        if (zoningPlanData && zoningPlanData.length > 0) {
+          console.log('🏛️ Using real zoning plan data:', zoningPlanData.length)
+          return zoningPlanData.map((item, index) => {
+            const data = item.params || item
+            
+            if (!data) {
+              console.warn(`⚠️ Item ${index + 1} has no data:`, item)
+              return null
+            }
+            
+            const { id, areaName, notes, status, createdAt } = data
+            
+            const processedItem = {
+              id: `ZP-${id || 'unknown'}`,
+              title: item.title || (areaName || 'แผนผังเมือง'),
+              img: uploadsData.find(upload => upload.zoningPlanId === id)?.url || 
+                   'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=300&fit=crop&crop=center',
+              desc: notes || 'ไม่มีคำอธิบาย',
+              status: status || 'draft',
+              statusText: getStatusText(status || 'draft'),
+              department: 'กองผังเมือง',
+              location: areaName || 'เขตเทศบาล',
+              startDate: createdAt,
+              endDate: null,
+              budget: '0',
+              progress: 25,
+              tags: [areaName || 'แผนผังเมือง', 'งานผังเมือง', getStatusText(status || 'draft')].filter(Boolean),
+              originalData: item,
+              // Add coordinates for map connection
+              coordinates: { lat: 7.5463 + (index * 0.01), lng: 99.6014 + (index * 0.01) }
+            }
+            
+            console.log(`✅ Processed zoning plan item ${index + 1}:`, processedItem.title)
+            return processedItem
+          }).filter(Boolean)
+        } else {
+          console.log('🏛️ Using mockup zoning plan data:', mockZoningPlan.length)
+          return mockZoningPlan.map((item, index) => ({
+            ...item,
+            // Add coordinates for map connection
+            coordinates: { lat: 7.5463 + (index * 0.01), lng: 99.6014 + (index * 0.01) }
+          }))
+        }
+
+      default:
+        return []
+    }
+  }, [buildingControlData, riskZoneData, zoningPlanData, uploadsData])
+
+  // Get status text
+  const getStatusText = (status) => {
+    switch (status) {
+      case 'approved': return 'อนุมัติแล้ว'
+      case 'pending': return 'รอพิจารณา'
+      case 'rejected': return 'ไม่อนุมัติ'
+      case 'draft': return 'ร่างเอกสาร'
+      case 'completed': return 'เสร็จสิ้น'
+      case 'in-progress': return 'กำลังดำเนินการ'
+      case 'planning': return 'วางแผน'
+      default: return 'ไม่ระบุ'
+    }
+  }
+
+  // Get map markers data
+  const getMapMarkers = useCallback(() => {
+    console.log('🗺️ Getting map markers...')
+    
+    const mockMarkers = [
+      {
+        id: 'demo-1',
+        type: 'buildingControl',
+        name: 'อาคารสำนักงานเทศบาล',
+        coordinates: { lat: 7.5563, lng: 99.6114 },
+        color: '#3B82F6',
+        icon: '🏗️',
+        popupContent: `<div class="p-3"><h3 class="font-bold">อาคารสำนักงานเทศบาล</h3><p>ใบอนุญาตสิ่งปลูกสร้าง</p></div>`
+      },
+      {
+        id: 'demo-2',
+        type: 'riskZone',
+        name: 'โครงการถนนรอบเมือง',
+        coordinates: { lat: 7.5663, lng: 99.6214 },
+        color: '#EF4444',
+        icon: '⚠️',
+        popupContent: `<div class="p-3"><h3 class="font-bold">โครงการถนนรอบเมือง</h3><p>งานสาธารณะ</p></div>`
+      },
+      {
+        id: 'demo-3',
+        type: 'zoningPlan',
+        name: 'แผนผังเมืองตรัง',
+        coordinates: { lat: 7.5463, lng: 99.6014 },
+        color: '#10B981',
+        icon: '🏛️',
+        popupContent: `<div class="p-3"><h3 class="font-bold">แผนผังเมืองตรัง</h3><p>งานผังเมือง</p></div>`
+      }
+    ]
+    
+    // ใช้ข้อมูลจริงจาก API ถ้ามี ถ้าไม่มีใช้ mockup
+    if (mapPoints && mapPoints.length > 0) {
+      console.log('🗺️ Using real map points:', mapPoints.length)
+      const validMarkers = mapPoints.map((point, index) => {
+        // ตรวจสอบว่าข้อมูลอยู่ใน params หรือตรงๆ
+        const data = point.params || point
+        
+        if (!data) {
+          console.warn(`⚠️ Map point ${index + 1} has no data:`, point)
+          return null
+        }
+        
+        const { 
+          id, 
+          name_local, 
+          nameLocal, 
+          house_no, 
+          houseNo, 
+          road, 
+          subdistrict, 
+          district, 
+          province, 
+          postcode, 
+          latitude, 
+          longitude 
+        } = data
+        
+        // ตรวจสอบว่ามี coordinates หรือไม่
+        if (!latitude || !longitude) {
+          console.warn(`⚠️ Map point ${index + 1} missing coordinates:`, data)
+          return null
+        }
+        
+        // Get point type from AdminJS data
+        let pointType = null
+        if (data.buildingControl || data.buildingControlId) pointType = 'buildingControl'
+        else if (data.riskZone || data.riskZoneId) pointType = 'riskZone'
+        else if (data.zoningPlan || data.zoningPlanId) pointType = 'zoningPlan'
+        
+        return {
+          id: id || point.id,
+          type: pointType,
+          name: name_local || nameLocal || point.name || 'ไม่ระบุชื่อ',
+          coordinates: {
+            lat: parseFloat(latitude),
+            lng: parseFloat(longitude)
+          },
+          color: apiService.getPointColor(pointType),
+          icon: apiService.getPointIcon(pointType),
+          popupContent: `
+            <div class="p-3">
+              <h3 class="font-bold text-lg mb-2">${name_local || nameLocal || 'ไม่ระบุชื่อ'}</h3>
+              <p class="text-sm text-gray-600 mb-2">
+                ${house_no || houseNo || ''} ${road || ''}<br>
+                ${subdistrict || ''}, ${district || ''}<br>
+                ${province || ''} ${postcode || ''}
+              </p>
+              <p class="text-xs text-gray-500">
+                ประเภท: ${getPointTypeText(pointType)}<br>
+                อัปเดต: ${point.updatedAt ? new Date(point.updatedAt).toLocaleDateString('th-TH') : 'ไม่ระบุ'}
+              </p>
+            </div>
+          `,
+          title: point.title,
+          recordActions: point.recordActions || [],
+          bulkActions: point.bulkActions || []
+        }
+      }).filter(Boolean)
+      
+      console.log(`🗺️ Processed ${validMarkers.length} valid map markers`)
+      return validMarkers.length > 0 ? validMarkers : mockMarkers
+    } else {
+      console.log('🗺️ Using mockup map markers')
+      return mockMarkers
+    }
+  }, [mapPoints])
+
+  // Get map markers from card data for better integration
+  const getMapMarkersFromCards = useCallback((tabType) => {
+    const cardData = getProcessedData(tabType)
+    return cardData.map((item) => ({
+      id: item.id,
+      type: tabType === 'medical' ? 'buildingControl' : 
+            tabType === 'software' ? 'riskZone' : 'zoningPlan',
+      name: item.title,
+      coordinates: item.coordinates,
+      color: tabType === 'medical' ? '#3B82F6' : 
+             tabType === 'software' ? '#EF4444' : '#10B981',
+      icon: tabType === 'medical' ? '🏗️' : 
+            tabType === 'software' ? '⚠️' : '🏛️',
+      popupContent: `
+        <div class="p-3">
+          <h3 class="font-bold text-lg mb-2">${item.title}</h3>
+          <p class="text-sm text-gray-600 mb-2">${item.desc}</p>
+          <p class="text-xs text-gray-500">
+            สถานะ: ${item.statusText}<br>
+            ผู้ยื่นคำขอ: ${item.applicant || item.contractor || item.department}
+          </p>
+        </div>
+      `,
+      title: item.title,
+      cardData: item
+    }))
+  }, [getProcessedData])
+
+  // Get card data with coordinates for map connection
+  const getCardDataWithCoordinates = useCallback((tabType) => {
+    const cardData = getProcessedData(tabType)
+    return cardData.map((item, index) => ({
+      ...item,
+      // Ensure coordinates exist for map connection
+      coordinates: item.coordinates || { 
+        lat: 7.5563 + (index * 0.01), 
+        lng: 99.6114 + (index * 0.01) 
+      }
+    }))
+  }, [getProcessedData])
+
+  // Get point type text
+  const getPointTypeText = (type) => {
+    switch (type) {
+      case 'buildingControl':
+        return 'ใบอนุญาตสิ่งปลูกสร้าง'
+      case 'riskZone':
+        return 'งานสาธารณะ'
+      case 'zoningPlan':
+        return 'งานผังเมือง'
+      default:
+        return 'ไม่ระบุ'
+    }
+  }
+
+  // Background API loading - ไม่บล็อค UI
+  useEffect(() => {
+    console.log('🔄 Starting background API loading...')
+    
+    // โหลด API ใน background โดยไม่ set loading state
+    Promise.allSettled([
+      fetchMapPoints(),
+      fetchBuildingControl(),
+      fetchRiskZone(),
+      fetchZoningPlan(),
+      fetchUploads()
+    ]).then(() => {
+      console.log('✅ Background API loading completed')
+    }).catch((error) => {
+      console.error('❌ Background API loading error:', error)
+    })
+  }, [])
+
+  return {
+    // Data
+    mapPoints,
+    buildingControlData,
+    riskZoneData,
+    zoningPlanData,
+    uploadsData,
+    
+    // Loading and error states (always false for mockup)
+    loading: false,
+    error: null,
+    metadata,
+    
+    // Functions
+    fetchMapPoints,
+    fetchBuildingControl,
+    fetchRiskZone,
+    fetchZoningPlan,
+    fetchUploads,
+    getProcessedData,
+    getMapMarkers,
+    getMapMarkersFromCards,
+    
+    // Utilities
+    getStatusText,
+    getPointTypeText,
+    getCardDataWithCoordinates
+  }
+} 

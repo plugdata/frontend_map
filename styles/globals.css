@@ -1,0 +1,431 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* styles/globals.css */
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: 'TH Sarabun New', 'Sarabun', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-size: 16px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Map Container Styles */
+.map-container {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.map-controls {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.btn-map-control {
+  width: 40px;
+  height: 40px;
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  color: #495057;
+}
+
+.btn-map-control:hover {
+  background: #f8f9fa;
+  border-color: #3498db;
+  color: #3498db;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Mobile Responsive */
+@media (max-width: 767.98px) {
+  .map-controls {
+    right: 0.5rem;
+  }
+}
+
+/* Desktop Layout Fixes */
+@media (min-width: 1024px) {
+  .lg\\:block {
+    display: block !important;
+  }
+  
+}
+
+/* Leaflet popup custom styles */
+.leaflet-popup-content-wrapper {
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.leaflet-popup-content {
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Custom marker styles */
+.custom-marker {
+  z-index: 1000 !important;
+}
+
+.custom-marker div {
+  position: relative !important;
+  z-index: 1001 !important;
+  animation: markerPulse 2s infinite;
+}
+
+@keyframes markerPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Map container ensures proper sizing */
+.leaflet-container {
+  height: 100% !important;
+  width: 100% !important;
+  z-index: 1 !important;
+  min-height: 400px !important;
+}
+
+/* Force map visibility on desktop */
+@media (min-width: 1024px) {
+  .leaflet-container {
+    min-height: 600px !important;
+    height: 100vh !important;
+  }
+  
+  .map-panel-desktop .leaflet-container {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  /* Ensure map tiles are visible */
+  .leaflet-tile-pane {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  
+  /* Force map container to be visible */
+  .map-panel-desktop > div {
+    min-height: 600px !important;
+    height: 100vh !important;
+  }
+}
+
+/* Map controls visibility */
+.map-controls-container {
+  z-index: 9999 !important;
+  position: absolute !important;
+  top: 1rem !important;
+  right: 1rem !important;
+}
+
+/* Force map to be visible on desktop */
+@media (min-width: 1024px) {
+  .map-panel-desktop {
+    min-height: 100vh !important;
+    height: auto !important;
+    display: block !important;
+  }
+  
+  .map-panel-desktop > div {
+    min-height: 100vh !important;
+    height: auto !important;
+  }
+}
+
+.map-controls-container button {
+  z-index: 10000 !important;
+  position: relative !important;
+}
+
+/* Ensure markers are visible above all elements */
+.leaflet-marker-pane {
+  z-index: 1000 !important;
+}
+
+/* Force map container visibility */
+.leaflet-container {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Ensure map tiles are loaded */
+.leaflet-tile-pane {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.leaflet-popup-pane {
+  z-index: 1001 !important;
+}
+
+/* Smooth transitions */
+* {
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Custom map marker styles - Google Maps teardrop */
+.custom-marker {
+  transition: all 0.3s ease;
+}
+
+.custom-marker:hover {
+  transform: scale(1.1);
+  z-index: 1001 !important;
+  filter: brightness(1.1);
+}
+
+.custom-marker svg {
+  transition: all 0.3s ease;
+}
+
+.custom-marker:hover svg {
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+}
+
+/* Smooth map transitions */
+.leaflet-container {
+  transition: all 0.5s ease;
+}
+
+/* Enhanced popup styles - Google Maps style */
+.custom-popup .leaflet-popup-content-wrapper {
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+  border: none;
+  padding: 0;
+  overflow: hidden;
+}
+
+.custom-popup .leaflet-popup-content {
+  margin: 0;
+  padding: 0;
+  font-family: 'Kanit', 'Sarabun', sans-serif;
+  width: 320px !important;
+}
+
+.custom-popup .leaflet-popup-tip {
+  border-top-color: #f8f9fa;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Popup card specific styles */
+.popup-card {
+  position: relative;
+}
+
+.popup-card button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Custom close button */
+.popup-card .close-btn {
+  transition: all 0.2s ease;
+}
+
+.popup-card .close-btn:hover {
+  background: rgba(0, 0, 0, 0.8) !important;
+  transform: scale(1.1);
+}
+
+/* Custom Scrollbar Styles */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 8px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Firefox scrollbar */
+.overflow-y-auto {
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 #f1f1f1;
+}
+
+/* Enhanced scrollbar for card list */
+.card-list-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #ec407a #fdf2f8;
+}
+
+.card-list-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+.card-list-scroll::-webkit-scrollbar-track {
+  background: #fdf2f8;
+  border-radius: 10px;
+  border: 1px solid #fce7f3;
+}
+
+.card-list-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #ec407a, #f06292);
+  border-radius: 10px;
+  border: 1px solid #fce7f3;
+  transition: all 0.3s ease;
+}
+
+.card-list-scroll::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #d81b60, #ec407a);
+  transform: scale(1.05);
+}
+/* Image Gallery Styles */
+.image-gallery {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.gallery-dot {
+  transition: opacity 0.3s ease;
+}
+
+.gallery-dot:hover {
+  opacity: 1 !important;
+}
+
+.gallery-nav {
+  transition: all 0.2s ease;
+}
+
+.gallery-nav:hover {
+  background: rgba(0, 0, 0, 0.8) !important;
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Mobile touch improvements */
+@media (max-width: 768px) {
+  .gallery-nav {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+  
+  .gallery-dot {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+/* Card hover effects for better UX */
+.card {
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Selected card highlight */
+.card.selected {
+  border: 2px solid #ec407a;
+  background-color: #fdf2f8;
+}
+
+/* Custom slider styles for distance filter */
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-track {
+  background: #e5e7eb;
+  height: 8px;
+  border-radius: 4px;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #ec407a;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  background: #d81b60;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(236, 64, 122, 0.4);
+}
+
+.slider::-moz-range-track {
+  background: #e5e7eb;
+  height: 8px;
+  border-radius: 4px;
+  border: none;
+}
+
+.slider::-moz-range-thumb {
+  background: #ec407a;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+.slider::-moz-range-thumb:hover {
+  background: #d81b60;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(236, 64, 122, 0.4);
+}
+
+/* Line clamp utility for description text */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

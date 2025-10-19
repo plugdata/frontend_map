@@ -1,0 +1,130 @@
+/* Custom Popup Styles */
+.customPopup .leaflet-popup-content-wrapper {
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
+}
+
+.customPopup .leaflet-popup-content {
+  margin: 0;
+  padding: 0;
+  width: auto !important;
+  min-width: 0;
+}
+
+.customPopup .leaflet-popup-tip {
+  background: white;
+  border: none;
+  box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+}
+
+.customPopup .leaflet-popup-close-button {
+  display: none;
+}
+
+/* Enhanced Popup Styles */
+.enhancedPopup {
+  max-width: 400px;
+  width: 100%;
+}
+
+.popupHeader {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  padding: 1.5rem;
+  position: relative;
+}
+
+.popupClose {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.popupClose:hover {
+  background: white;
+  transform: scale(1.05);
+}
+
+.popupContent {
+  padding: 1.5rem;
+  background: white;
+}
+
+.popupActions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.popupButton {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.popupButtonPrimary {
+  background: #3b82f6;
+  color: white;
+}
+
+.popupButtonPrimary:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.popupButtonSecondary {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.popupButtonSecondary:hover {
+  background: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+/* Text truncation */
+.lineClamp2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .enhancedPopup {
+    max-width: 320px;
+  }
+  
+  .popupHeader {
+    padding: 1rem;
+  }
+  
+  .popupContent {
+    padding: 1rem;
+  }
+  
+  .popupActions {
+    flex-direction: column;
+  }
+}
